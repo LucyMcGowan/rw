@@ -1,0 +1,62 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# rw
+
+<!-- badges: start -->
+
+<!-- badges: end -->
+
+The purpose of the rw package is to compute Robins-Wang variance
+estimates for multiply imputed data analysis.
+
+## Installation
+
+You can install the development version of rw like so:
+
+``` r
+devtools::install_github("LucyMcGowan/rw")
+```
+
+## Example
+
+Below is an example replicated the Giganti & Shepherd (2020) results.
+
+``` r
+library(rw)
+library(mice)
+#> 
+#> Attaching package: 'mice'
+#> The following object is masked from 'package:stats':
+#> 
+#>     filter
+#> The following objects are masked from 'package:base':
+#> 
+#>     cbind, rbind
+
+set.seed(1)
+meth <- make.method(giganti_data)
+meth[] <- ""
+meth[c("A", "D")] <- c("norm", "logreg")
+
+pred <- make.predictorMatrix(giganti_data)
+pred[,] <- 0
+pred["A", c("X1", "X2", "A.star", "D.star")] <- 1
+pred["D", c("X1", "X2", "A.star", "D.star", "A")] <- 1
+
+imp <- mice(giganti_data, m = 10, method = meth, predictorMatrix = pred,
+            print = FALSE, tasks = "train")
+
+fit_rw <- with_rw(imp, glm(D ~ A, subset = A > 2, family = binomial()))
+
+pooled <- pool_rw(fit_rw)
+pooled
+#> 
+#> ── Robins-Wang Pooled Results ──────────────────────────────────────────────────
+#> Number of imputations: 10
+#> Sample size: 4000
+#> 
+#>          term estimate std.error statistic   p.value conf.low conf.high
+#> 1 (Intercept)  -3.4864   0.23876    -14.60 2.721e-48  -3.9543    -3.018
+#> 2           A   0.8764   0.08217     10.67 1.469e-26   0.7154     1.038
+```
