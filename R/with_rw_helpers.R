@@ -1,3 +1,13 @@
+extract_model_family <- function(model) {
+  if (inherits(model, "lm") && !inherits(model, "glm")) {
+    "gaussian"
+  } else if (inherits(model, "glm")) {
+    stats::family(model)$family
+  } else {
+    cli::cli_abort("Unsupported model class: {.cls {class(model)}}")
+  }
+}
+
 extract_single_model <- function(data, var, p) {
   mod <- data$models[[var]][[p]]
   beta <- stats::setNames(as.numeric(mod$beta.dot), mod$xnames)
@@ -57,12 +67,6 @@ convert_logreg_factors <- function(data.i, imputed_vars) {
   data.i
 }
 
-prepare_imputed_data <- function(data, p, imputed_vars, n) {
-  data.i <- mice::complete(data, action = p)
-  data.i <- convert_logreg_factors(data.i, imputed_vars)
-  data.i$.imputed <- compute_imputation_mask(data, imputed_vars, n)
-  data.i
-}
 
 compute_imputation_mask <- function(data, imputed_vars, n) {
   Reduce(`|`, lapply(imputed_vars, function(var) {
@@ -70,7 +74,12 @@ compute_imputation_mask <- function(data, imputed_vars, n) {
   }), init = rep(0, n))
 }
 
-
+prepare_imputed_data <- function(data, p, imputed_vars, n) {
+  data.i <- mice::complete(data, action = p)
+  data.i <- convert_logreg_factors(data.i, imputed_vars)
+  data.i$.imputed <- compute_imputation_mask(data, imputed_vars, n)
+  data.i
+}
 
 fit_analysis_model <- function(expr, data.i, envir) {
   mod_analysis <- eval(expr = expr, envir = data.i, enclos = envir)

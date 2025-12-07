@@ -49,15 +49,24 @@ pool_estimates <- function(results) {
   rowMeans(coefs)
 }
 
-construct_pooled_output <- function(est, se) {
+construct_pooled_output <- function(est, se, df, family) {
+  test_stat <- est / se
+  
+  if (family == "gaussian") {
+    crit_val <- stats::qt(0.975, df = df)
+    p_value <- 2 * stats::pt(-abs(test_stat), df = df)
+  } else {
+    crit_val <- stats::qnorm(0.975)  
+    p_value <- 2 * stats::pnorm(-abs(test_stat))
+  }
   out <- data.frame(
     term = names(est),
     estimate = est,
     std.error = se,
-    statistic = est / se,
-    p.value = 2 * stats::pnorm(-abs(est / se)),
-    conf.low = est - 1.96 * se,
-    conf.high = est + 1.96 * se
+    statistic = test_stat,
+    p.value = p_value,
+    conf.low = est - crit_val * se,
+    conf.high = est + crit_val * se
   )
   out
 }

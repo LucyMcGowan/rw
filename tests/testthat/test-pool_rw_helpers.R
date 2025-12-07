@@ -145,7 +145,7 @@ test_that("construct_pooled_output creates correct data frame structure", {
   est <- c(intercept = 1.5, x = 2.0)
   se <- c(intercept = 0.5, x = 0.3)
   
-  result <- construct_pooled_output(est, se)
+  result <- construct_pooled_output(est, se, df = 100, family = "gaussian")
   
   expect_s3_class(result, "data.frame")
   expect_named(result, c("term", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high"))
@@ -156,7 +156,7 @@ test_that("construct_pooled_output calculates statistics correctly", {
   est <- c(x = 2.0)
   se <- c(x = 0.5)
   
-  result <- construct_pooled_output(est, se)
+  result <- construct_pooled_output(est, se, df = 100, family = "gaussian")
   
   expect_equal(result$estimate, 2.0)
   expect_equal(result$std.error, 0.5)
@@ -167,7 +167,7 @@ test_that("construct_pooled_output calculates p-values correctly", {
   est <- c(x = 0.0)
   se <- c(x = 1.0)
   
-  result <- construct_pooled_output(est, se)
+  result <- construct_pooled_output(est, se, df = 100, family = "gaussian")
   
   expect_equal(result$p.value, 1.0)
 })
@@ -176,10 +176,10 @@ test_that("construct_pooled_output calculates confidence intervals correctly", {
   est <- c(x = 10.0)
   se <- c(x = 2.0)
   
-  result <- construct_pooled_output(est, se)
+  result <- construct_pooled_output(est, se, df = NULL, family = "binomial")
   
-  expect_equal(result$conf.low, 10.0 - 1.96 * 2.0)
-  expect_equal(result$conf.high, 10.0 + 1.96 * 2.0)
+  expect_equal(result$conf.low, 10.0 - stats::qnorm(0.975) * 2.0)
+  expect_equal(result$conf.high, 10.0 + stats::qnorm(0.975) * 2.0)
 })
 
 
@@ -187,7 +187,7 @@ test_that("construct_pooled_output preserves term names", {
   est <- c("(Intercept)" = 5.0, age = 0.5, bmi = 1.2)
   se <- c("(Intercept)" = 1.0, age = 0.1, bmi = 0.3)
   
-  result <- construct_pooled_output(est, se)
+  result <- construct_pooled_output(est, se, df = 100, family = "gaussian")
   
   expect_equal(result$term, c("(Intercept)", "age", "bmi"))
 })
@@ -247,7 +247,7 @@ test_that("construct_pooled_output handles negative estimates", {
   est <- c(x = -2.5)
   se <- c(x = 0.5)
   
-  result <- construct_pooled_output(est, se)
+  result <- construct_pooled_output(est, se, df = NULL, family = "binomial")
   
   expect_equal(result$estimate, -2.5)
   expect_equal(result$statistic, -5.0)
@@ -259,7 +259,7 @@ test_that("construct_pooled_output handles very small standard errors", {
   est <- c(x = 5.0)
   se <- c(x = 0.001)
   
-  result <- construct_pooled_output(est, se)
+  result <- construct_pooled_output(est, se, df = NULL, family = "binomial")
   
   expect_true(result$p.value < 0.001)
   expect_true(abs(result$conf.high - result$conf.low) < 0.01)
@@ -269,7 +269,7 @@ test_that("construct_pooled_output handles very large standard errors", {
   est <- c(x = 1.0)
   se <- c(x = 100.0)
   
-  result <- construct_pooled_output(est, se)
+  result <- construct_pooled_output(est, se, df = NULL, family = "binomial")
   
   expect_true(result$p.value > 0.9)
   expect_true(abs(result$conf.high - result$conf.low) > 300)

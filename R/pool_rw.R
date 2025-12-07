@@ -27,8 +27,15 @@ pool_rw <- function(object, ...) {
   est <- pool_estimates(results)
   GAMMA <- compute_rw_variance(results, m, n)
   se <- sqrt(diag(GAMMA))
+  family <- extract_model_family(results[[1]]$model)
   
-  out <- construct_pooled_output(est, se)
+  if (family == "gaussian") {
+    df <- stats::df.residual(results[[1]]$model)
+  } else {
+    df <- NULL
+  }
+  
+  out <- construct_pooled_output(est, se, df, family)
   
   structure(
     list(

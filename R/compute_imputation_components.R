@@ -114,21 +114,6 @@ compute_information <- function(data, model_info, var_name, imputed_flag) {
 }
 
 
-compute_imputation_components <- function(data.i, model_list, imputed_vars) {
-  S_u <- compute_score_matrix(data.i, model_list, imputed_vars)
-  
-  ImputedMat <- matrix(data.i$.imputed == 1, nrow(S_u), ncol(S_u), 
-                       byrow = FALSE)
-  S_mis_imp <- S_u * ImputedMat
-  S_orig <- S_u * (1 - ImputedMat)
-  
-  S2 <- compute_information_matrix(data.i, model_list, imputed_vars)
-  Dmat <- solve(S2)
-  d <- t((-1) * Dmat %*% t(S_orig))
-  
-  list(S_mis_imp = S_mis_imp, d = d)
-}
-
 compute_score_matrix <- function(data.i, model_list, imputed_vars) {
   S_u_list <- lapply(seq_along(imputed_vars), function(i) {
     compute_score(data.i, model_list[[i]], imputed_vars[i])
@@ -158,4 +143,20 @@ build_block_diagonal <- function(S2_list) {
   }
   
   S2
+}
+
+
+compute_imputation_components <- function(data.i, model_list, imputed_vars) {
+  S_u <- compute_score_matrix(data.i, model_list, imputed_vars)
+  
+  ImputedMat <- matrix(data.i$.imputed == 1, nrow(S_u), ncol(S_u), 
+                       byrow = FALSE)
+  S_mis_imp <- S_u * ImputedMat
+  S_orig <- S_u * (1 - ImputedMat)
+  
+  S2 <- compute_information_matrix(data.i, model_list, imputed_vars)
+  Dmat <- solve(S2)
+  d <- t((-1) * Dmat %*% t(S_orig))
+  
+  list(S_mis_imp = S_mis_imp, d = d)
 }
