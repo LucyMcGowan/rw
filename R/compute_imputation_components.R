@@ -100,7 +100,7 @@ compute_information <- function(data, model_info, var_name, imputed_flag) {
     w_obs <- w
     w_obs[imputed_flag == 1] <- 0
     
-    # Compute information matrix efficiently
+    # Compute information matrix 
     X_weighted <- sweep(X, 1, sqrt(w_obs), `*`)
     S2_mod <- -crossprod(X_weighted) / n
     

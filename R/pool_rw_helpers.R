@@ -1,28 +1,3 @@
-pool_estimates <- function(results) {
-  coefs <- vapply(results, function(r) stats::coef(r$model), 
-                  numeric(length(stats::coef(results[[1]]$model))))
-  rowMeans(coefs)
-}
-
-compute_rw_variance <- function(results, m, n) {
-  U_sum <- Reduce(`+`, lapply(results, function(r) r$U))
-  tau_sum <- Reduce(`+`, lapply(results, function(r) r$tau))
-  
-  u_bar <- U_sum / m
-  omega <- compute_omega(u_bar, n)
-  
-  components <- compute_variance_components(results, m, n)
-  
-  delta <- omega + 
-    components$kappa %*% components$alpha %*% t(components$kappa) +
-    (1 / n) * (components$kappa %*% t(components$d_bar) %*% u_bar + 
-                 t(components$kappa %*% t(components$d_bar) %*% u_bar))
-  
-  tau <- tau_sum / (m * n)
-  tau_inv <- solve(tau)
-  (1 / n) * tau_inv %*% delta %*% t(tau_inv)
-}
-
 compute_omega <- function(u_bar, n) {
   crossprod(u_bar) / n
 }
@@ -47,6 +22,31 @@ compute_variance_components <- function(results, m, n) {
     alpha = alpha_sum / (n * m),
     d_bar = d_bar_sum / m
   )
+}
+
+compute_rw_variance <- function(results, m, n) {
+  U_sum <- Reduce(`+`, lapply(results, function(r) r$U))
+  tau_sum <- Reduce(`+`, lapply(results, function(r) r$tau))
+  
+  u_bar <- U_sum / m
+  omega <- compute_omega(u_bar, n)
+  
+  components <- compute_variance_components(results, m, n)
+  
+  delta <- omega + 
+    components$kappa %*% components$alpha %*% t(components$kappa) +
+    (1 / n) * (components$kappa %*% t(components$d_bar) %*% u_bar + 
+                 t(components$kappa %*% t(components$d_bar) %*% u_bar))
+  
+  tau <- tau_sum / (m * n)
+  tau_inv <- solve(tau)
+  (1 / n) * tau_inv %*% delta %*% t(tau_inv)
+}
+
+pool_estimates <- function(results) {
+  coefs <- vapply(results, function(r) stats::coef(r$model), 
+                  numeric(length(stats::coef(results[[1]]$model))))
+  rowMeans(coefs)
 }
 
 construct_pooled_output <- function(est, se) {
