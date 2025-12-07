@@ -46,7 +46,13 @@ The first step is to impute your data using mice. Note that currently only `meth
 library(rw)
 library(mice)
 set.seed(1)
-imp <- mice(nhanes, method = "norm", m = 5, tasks = "train", print = FALSE)
+nhanes_scaled <- as.data.frame(scale(nhanes))
+
+imp <- mice(nhanes_scaled, 
+            method = "norm",
+            m = 5, 
+            tasks = "train",
+            print = FALSE)
 ```
 
 Now, suppose we want to fit a model predicting `bmi` from `age` and `hyp`. The `with_rw` function allows this, where the first argument is the imputation object from the `mice` function above and the second is the model expression. Note that currently outcome models must be Gaussian or Binomial.
