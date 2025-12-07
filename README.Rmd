@@ -24,15 +24,22 @@ The purpose of the rw package is to compute Robins-Wang variance estimates for m
 
 ## Installation
 
-You can install the development version of rw like so:
+This package requires the development version of mice with the `tasks` argument:
+
+```r
+remotes::install_github("amices/mice")
+```
+
+Then you can install the development version of rw like so:
 
 ``` r
-devtools::install_github("LucyMcGowan/rw")
+remotes::install_github("LucyMcGowan/rw")
 ```
+
 
 ## Example
 
-Below is an example replicated the Giganti & Shepherd (2020) results. 
+Below is an example replicated the Giganti & Shepherd (2020) results.
 
 ```{r example}
 #| warning: false

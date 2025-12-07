@@ -15,10 +15,17 @@ estimates for multiply imputed data analysis.
 
 ## Installation
 
-You can install the development version of rw like so:
+This package requires the development version of mice with the `tasks`
+argument:
 
 ``` r
-devtools::install_github("LucyMcGowan/rw")
+remotes::install_github("amices/mice")
+```
+
+Then you can install the development version of rw like so:
+
+``` r
+remotes::install_github("LucyMcGowan/rw")
 ```
 
 ## Example
