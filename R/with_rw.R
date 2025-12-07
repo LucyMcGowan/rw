@@ -11,8 +11,6 @@
 #' - norm (for continuous variables)
 #' - logreg (for binary variables)
 #' 
-#' Non-parametric methods like pmm, cart, rf are NOT supported because they
-#' don't have well-defined score functions needed for Robins-Wang variance.
 #' 
 #' @examples
 #' \dontrun{
