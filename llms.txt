@@ -31,7 +31,13 @@ and perform multiple imputation using the `norm` method.
 library(rw)
 library(mice)
 set.seed(1)
-imp <- mice(nhanes, method = "norm", m = 5, tasks = "train", print = FALSE)
+nhanes_scaled <- as.data.frame(scale(nhanes))
+
+imp <- mice(nhanes_scaled, 
+            method = "norm",
+            m = 5, 
+            tasks = "train",
+            print = FALSE)
 ```
 
 Now, suppose we want to fit a model predicting `bmi` from `age` and
@@ -55,9 +61,9 @@ pool_rw(fit)
 #> Sample size: 25
 #> 
 #>                    term estimate std.error statistic p.value conf.low conf.high
-#> (Intercept) (Intercept)   28.420    62.471   0.45493  0.6492   -94.02    150.86
-#> age                 age   -2.512     6.399  -0.39252  0.6947   -15.05     10.03
-#> hyp                 hyp    1.878    53.437   0.03514  0.9720  -102.86    106.61
+#> (Intercept) (Intercept) -0.04751    0.3774   -0.1259  0.9010  -0.8302    0.7352
+#> age                 age -0.45865    0.6034   -0.7601  0.4552  -1.7100    0.7927
+#> hyp                 hyp  0.17550    1.6921    0.1037  0.9183  -3.3337    3.6847
 ```
 
 Let’s compare this result to using Rubin’s rules.
@@ -66,10 +72,10 @@ Let’s compare this result to using Rubin’s rules.
 fit_rr <- with(imp, lm(bmi ~ age + hyp))
 pool(fit_rr) |>
   summary()
-#>          term  estimate std.error  statistic       df     p.value
-#> 1 (Intercept) 28.419634  4.660152  6.0984355 3.292597 0.006729336
-#> 2         age -2.511792  1.995151 -1.2589480 3.883028 0.278417451
-#> 3         hyp  1.877623  4.096953  0.4582975 2.895862 0.678933396
+#>          term    estimate std.error  statistic        df   p.value
+#> 1 (Intercept) -0.04751093 0.2077719 -0.2286686 15.029658 0.8222087
+#> 2         age -0.45864607 0.3618038 -1.2676651  4.179919 0.2709358
+#> 3         hyp  0.17549617 0.3683495  0.4764393  3.619564 0.6610792
 ```
 
 ## Giganti & Shepherd Example

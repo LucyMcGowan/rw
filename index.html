@@ -68,7 +68,13 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lucymcgowan.github.io/rw/">rw</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/amices/mice" class="external-link">mice</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://amices.org/mice/reference/mice.html" class="external-link">mice</a></span><span class="op">(</span><span class="va">nhanes</span>, method <span class="op">=</span> <span class="st">"norm"</span>, m <span class="op">=</span> <span class="fl">5</span>, tasks <span class="op">=</span> <span class="st">"train"</span>, print <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">nhanes_scaled</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">nhanes</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://amices.org/mice/reference/mice.html" class="external-link">mice</a></span><span class="op">(</span><span class="va">nhanes_scaled</span>, </span>
+<span>            method <span class="op">=</span> <span class="st">"norm"</span>,</span>
+<span>            m <span class="op">=</span> <span class="fl">5</span>, </span>
+<span>            tasks <span class="op">=</span> <span class="st">"train"</span>,</span>
+<span>            print <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>Now, suppose we want to fit a model predicting <code>bmi</code> from <code>age</code> and <code>hyp</code>. The <code>with_rw</code> function allows this, where the first argument is the imputation object from the <code>mice</code> function above and the second is the model expression. Note that currently outcome models must be Gaussian or Binomial.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/with_rw.html">with_rw</a></span><span class="op">(</span><span class="va">imp</span>, <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bmi</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">hyp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -81,18 +87,18 @@
 <span><span class="co">#&gt; Sample size: 25</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                    term estimate std.error statistic p.value conf.low conf.high</span></span>
-<span><span class="co">#&gt; (Intercept) (Intercept)   28.420    62.471   0.45493  0.6492   -94.02    150.86</span></span>
-<span><span class="co">#&gt; age                 age   -2.512     6.399  -0.39252  0.6947   -15.05     10.03</span></span>
-<span><span class="co">#&gt; hyp                 hyp    1.878    53.437   0.03514  0.9720  -102.86    106.61</span></span></code></pre></div>
+<span><span class="co">#&gt; (Intercept) (Intercept) -0.04751    0.3774   -0.1259  0.9010  -0.8302    0.7352</span></span>
+<span><span class="co">#&gt; age                 age -0.45865    0.6034   -0.7601  0.4552  -1.7100    0.7927</span></span>
+<span><span class="co">#&gt; hyp                 hyp  0.17550    1.6921    0.1037  0.9183  -3.3337    3.6847</span></span></code></pre></div>
 <p>Let’s compare this result to using Rubin’s rules.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_rr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">imp</span>, <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bmi</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">hyp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://amices.org/mice/reference/pool.html" class="external-link">pool</a></span><span class="op">(</span><span class="va">fit_rr</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          term  estimate std.error  statistic       df     p.value</span></span>
-<span><span class="co">#&gt; 1 (Intercept) 28.419634  4.660152  6.0984355 3.292597 0.006729336</span></span>
-<span><span class="co">#&gt; 2         age -2.511792  1.995151 -1.2589480 3.883028 0.278417451</span></span>
-<span><span class="co">#&gt; 3         hyp  1.877623  4.096953  0.4582975 2.895862 0.678933396</span></span></code></pre></div>
+<span><span class="co">#&gt;          term    estimate std.error  statistic        df   p.value</span></span>
+<span><span class="co">#&gt; 1 (Intercept) -0.04751093 0.2077719 -0.2286686 15.029658 0.8222087</span></span>
+<span><span class="co">#&gt; 2         age -0.45864607 0.3618038 -1.2676651  4.179919 0.2709358</span></span>
+<span><span class="co">#&gt; 3         hyp  0.17549617 0.3683495  0.4764393  3.619564 0.6610792</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="giganti--shepherd-example">Giganti &amp; Shepherd Example<a class="anchor" aria-label="anchor" href="#giganti--shepherd-example"></a>
