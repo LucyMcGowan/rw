@@ -67,6 +67,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lucymcgowan.github.io/rw/">rw</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/amices/mice" class="external-link">mice</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://amices.org/mice/reference/mice.html" class="external-link">mice</a></span><span class="op">(</span><span class="va">nhanes</span>, method <span class="op">=</span> <span class="st">"norm"</span>, m <span class="op">=</span> <span class="fl">5</span>, tasks <span class="op">=</span> <span class="st">"train"</span>, print <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>Now, suppose we want to fit a model predicting <code>bmi</code> from <code>age</code> and <code>hyp</code>. The <code>with_rw</code> function allows this, where the first argument is the imputation object from the <code>mice</code> function above and the second is the model expression. Note that currently outcome models must be Gaussian or Binomial.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -79,19 +80,19 @@
 <span><span class="co">#&gt; Number of imputations: 5</span></span>
 <span><span class="co">#&gt; Sample size: 25</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;          term estimate std.error statistic p.value conf.low conf.high</span></span>
-<span><span class="co">#&gt; 1 (Intercept)   28.617     51.88   0.55161  0.5812   -73.06    130.30</span></span>
-<span><span class="co">#&gt; 2         age   -3.058     23.33  -0.13105  0.8957   -48.79     42.67</span></span>
-<span><span class="co">#&gt; 3         hyp    3.204     34.36   0.09325  0.9257   -64.13     70.54</span></span></code></pre></div>
+<span><span class="co">#&gt;                    term estimate std.error statistic p.value conf.low conf.high</span></span>
+<span><span class="co">#&gt; (Intercept) (Intercept)   28.420    62.471   0.45493  0.6492   -94.02    150.86</span></span>
+<span><span class="co">#&gt; age                 age   -2.512     6.399  -0.39252  0.6947   -15.05     10.03</span></span>
+<span><span class="co">#&gt; hyp                 hyp    1.878    53.437   0.03514  0.9720  -102.86    106.61</span></span></code></pre></div>
 <p>Let’s compare this result to using Rubin’s rules.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_rr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">imp</span>, <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">bmi</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">hyp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://amices.org/mice/reference/pool.html" class="external-link">pool</a></span><span class="op">(</span><span class="va">fit_rr</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          term  estimate std.error statistic        df      p.value</span></span>
-<span><span class="co">#&gt; 1 (Intercept) 28.616514  3.403986  8.406766 11.558784 2.911276e-06</span></span>
-<span><span class="co">#&gt; 2         age -3.057764  1.436188 -2.129083  8.956052 6.226165e-02</span></span>
-<span><span class="co">#&gt; 3         hyp  3.203510  2.961103  1.081864  7.473962 3.129791e-01</span></span></code></pre></div>
+<span><span class="co">#&gt;          term  estimate std.error  statistic       df     p.value</span></span>
+<span><span class="co">#&gt; 1 (Intercept) 28.419634  4.660152  6.0984355 3.292597 0.006729336</span></span>
+<span><span class="co">#&gt; 2         age -2.511792  1.995151 -1.2589480 3.883028 0.278417451</span></span>
+<span><span class="co">#&gt; 3         hyp  1.877623  4.096953  0.4582975 2.895862 0.678933396</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="giganti--shepherd-example">Giganti &amp; Shepherd Example<a class="anchor" aria-label="anchor" href="#giganti--shepherd-example"></a>
@@ -120,9 +121,12 @@
 <span><span class="co">#&gt; Number of imputations: 10</span></span>
 <span><span class="co">#&gt; Sample size: 4000</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;          term estimate std.error statistic   p.value conf.low conf.high</span></span>
-<span><span class="co">#&gt; 1 (Intercept)  -3.4864   0.23876    -14.60 2.721e-48  -3.9543    -3.018</span></span>
-<span><span class="co">#&gt; 2           A   0.8764   0.08217     10.67 1.469e-26   0.7154     1.038</span></span></code></pre></div>
+<span><span class="co">#&gt;                    term estimate std.error statistic   p.value conf.low</span></span>
+<span><span class="co">#&gt; (Intercept) (Intercept)  -3.4864   0.23876    -14.60 2.721e-48  -3.9543</span></span>
+<span><span class="co">#&gt; A                     A   0.8764   0.08217     10.67 1.469e-26   0.7154</span></span>
+<span><span class="co">#&gt;             conf.high</span></span>
+<span><span class="co">#&gt; (Intercept)    -3.018</span></span>
+<span><span class="co">#&gt; A               1.038</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
