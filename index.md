@@ -1,7 +1,7 @@
 # rw
 
 The purpose of the rw package is to compute Robins-Wang variance
-estimates for multiply imputed data analysis.
+estimates for multiply imputed data analyses.
 
 ## Installation
 
@@ -20,7 +20,7 @@ remotes::install_github("LucyMcGowan/rw")
 
 ## Example
 
-Below is an example replicated the Giganti & Shepherd (2020) results.
+Below is an example to replicate the Giganti & Shepherd (2020) results.
 
 ``` r
 library(rw)
