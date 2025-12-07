@@ -29,6 +29,11 @@ with_rw <- function(data, expr, ...) {
   n <- nrow(data$data)
   
   imputed_vars <- names(data$models)
+  
+  imputed_vars <- imputed_vars[sapply(imputed_vars, function(var) {
+    sum(is.na(data$data[[var]])) > 0
+  })]
+  
   model_list <- extract_imputation_models(data, imputed_vars, m)
   
   results <- process_imputed_datasets(data, substitute(expr), model_list, 

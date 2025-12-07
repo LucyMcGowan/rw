@@ -159,57 +159,6 @@ test_that("convert_logreg_factors handles multiple variables", {
   expect_equal(result$z, c(1.5, 2.5, 3.5))
 })
 
-test_that("compute_imputation_mask identifies imputed values", {
-  data <- list(
-    data = data.frame(
-      x = c(1, NA, 3, NA),
-      y = c(NA, 2, 3, 4)
-    )
-  )
-  
-  result <- compute_imputation_mask(data, c("x", "y"), 4)
-  
-  expect_equal(result, c(TRUE, TRUE, FALSE, TRUE))
-})
-
-test_that("compute_imputation_mask handles no missing values", {
-  data <- list(
-    data = data.frame(
-      x = c(1, 2, 3),
-      y = c(4, 5, 6)
-    )
-  )
-  
-  result <- compute_imputation_mask(data, c("x", "y"), 3)
-  
-  expect_equal(result, c(FALSE, FALSE, FALSE))
-})
-
-test_that("compute_imputation_mask handles all missing values", {
-  data <- list(
-    data = data.frame(
-      x = c(NA, NA, NA),
-      y = c(NA, NA, NA)
-    )
-  )
-  
-  result <- compute_imputation_mask(data, c("x", "y"), 3)
-  
-  expect_equal(result, c(TRUE, TRUE, TRUE))
-})
-
-test_that("compute_imputation_mask handles single variable", {
-  data <- list(
-    data = data.frame(
-      x = c(1, NA, 3)
-    )
-  )
-  
-  result <- compute_imputation_mask(data, "x", 3)
-  
-  expect_equal(result, c(FALSE, TRUE, FALSE))
-})
-
 test_that("fit_analysis_model fits lm correctly", {
   data <- data.frame(
     y = c(2, 4, 6, 8),

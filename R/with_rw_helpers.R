@@ -67,20 +67,6 @@ convert_logreg_factors <- function(data.i, imputed_vars) {
   data.i
 }
 
-
-compute_imputation_mask <- function(data, imputed_vars, n) {
-  Reduce(`|`, lapply(imputed_vars, function(var) {
-    as.integer(is.na(data$data[[var]]))
-  }), init = rep(0, n))
-}
-
-prepare_imputed_data <- function(data, p, imputed_vars, n) {
-  data.i <- mice::complete(data, action = p)
-  data.i <- convert_logreg_factors(data.i, imputed_vars)
-  data.i$.imputed <- compute_imputation_mask(data, imputed_vars, n)
-  data.i
-}
-
 fit_analysis_model <- function(expr, data.i, envir) {
   mod_analysis <- eval(expr = expr, envir = data.i, enclos = envir)
   if (is.expression(mod_analysis)) {

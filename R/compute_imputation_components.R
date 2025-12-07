@@ -1,3 +1,25 @@
+compute_imputation_masks <- function(data, imputed_vars, n) {
+  # Return a matrix: n x num_vars, where each column indicates missingness for that variable
+  masks <- sapply(imputed_vars, function(var) {
+    as.integer(is.na(data$data[[var]]))
+  })
+  colnames(masks) <- imputed_vars
+  masks
+}
+
+prepare_imputed_data <- function(data, p, imputed_vars, n) {
+  data.i <- mice::complete(data, action = p)
+  data.i <- convert_logreg_factors(data.i, imputed_vars)
+  
+  # Add variable-specific imputation indicators
+  imputed_masks <- compute_imputation_masks(data, imputed_vars, n)
+  for (var in imputed_vars) {
+    data.i[[paste0(".imputed_", var)]] <- imputed_masks[, var]
+  }
+  
+  data.i
+}
+
 compute_score <- function(data, model_info, var_name) {
   # Extract and clean coefficient names
   beta <- model_info$coefficients
@@ -123,8 +145,9 @@ compute_score_matrix <- function(data.i, model_list, imputed_vars) {
 
 compute_information_matrix <- function(data.i, model_list, imputed_vars) {
   S2_list <- lapply(seq_along(imputed_vars), function(i) {
-    compute_information(data.i, model_list[[i]], imputed_vars[i], 
-                        data.i$.imputed)
+    # Use variable-specific imputation flag
+    var_imputed_flag <- data.i[[paste0(".imputed_", imputed_vars[i])]]
+    compute_information(data.i, model_list[[i]], imputed_vars[i], var_imputed_flag)
   })
   
   build_block_diagonal(S2_list)
@@ -147,15 +170,52 @@ build_block_diagonal <- function(S2_list) {
 
 
 compute_imputation_components <- function(data.i, model_list, imputed_vars) {
+  # Compute score matrix for all variables
   S_u <- compute_score_matrix(data.i, model_list, imputed_vars)
   
-  ImputedMat <- matrix(data.i$.imputed == 1, nrow(S_u), ncol(S_u), 
-                       byrow = FALSE)
-  S_mis_imp <- S_u * ImputedMat
-  S_orig <- S_u * (1 - ImputedMat)
+  # Build S_mis_imp and S_orig using variable-specific masks
+  n <- nrow(data.i)
+  col_idx <- 1
+  S_mis_imp_list <- list()
+  S_orig_list <- list()
   
+  for (i in seq_along(imputed_vars)) {
+    var <- imputed_vars[i]
+    model_info <- model_list[[i]]
+    
+    # Determine number of parameters for this variable
+    n_params <- length(model_info$coefficients)
+    if (model_info$family[1] == "gaussian") {
+      n_params <- n_params + 1  # Add 1 for sigma parameter
+    }
+    
+    # Get variable-specific imputation indicator
+    var_imputed <- data.i[[paste0(".imputed_", var)]]
+    
+    # Extract columns for this variable
+    var_cols <- col_idx:(col_idx + n_params - 1)
+    
+    # Create masks: 1 if imputed, 0 if observed
+    ImputedMat_var <- matrix(var_imputed == 1, n, n_params, byrow = FALSE)
+    
+    # S_mis_imp: scores for imputed observations only
+    S_mis_imp_list[[i]] <- S_u[, var_cols, drop = FALSE] * ImputedMat_var
+    
+    # S_orig: scores for observed observations only
+    S_orig_list[[i]] <- S_u[, var_cols, drop = FALSE] * (1 - ImputedMat_var)
+    
+    col_idx <- col_idx + n_params
+  }
+  
+  # Combine all variables
+  S_mis_imp <- do.call(cbind, S_mis_imp_list)
+  S_orig <- do.call(cbind, S_orig_list)
+  
+  # Compute information matrix and its inverse
   S2 <- compute_information_matrix(data.i, model_list, imputed_vars)
   Dmat <- solve(S2)
+  
+  # Compute d = -Dmat %*% t(S_orig)
   d <- t((-1) * Dmat %*% t(S_orig))
   
   list(S_mis_imp = S_mis_imp, d = d)

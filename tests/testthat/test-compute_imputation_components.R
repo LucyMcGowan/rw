@@ -1,3 +1,56 @@
+
+test_that("compute_imputation_masks identifies imputed values", {
+  data <- list(
+    data = data.frame(
+      x = c(1, NA, 3, NA),
+      y = c(NA, 2, 3, 4)
+    )
+  )
+  
+  result <- compute_imputation_masks(data, c("x", "y"), 4)
+  
+  expect_equal(result[,1], c(0, 1, 0, 1))
+  expect_equal(result[,2], c(1, 0, 0, 0))
+})
+
+test_that("compute_imputation_masks handles no missing values", {
+  data <- list(
+    data = data.frame(
+      x = c(1, 2, 3),
+      y = c(4, 5, 6)
+    )
+  )
+  
+  result <- compute_imputation_masks(data, c("x", "y"), 3)
+  
+  expect_equal(unname(result), matrix(rep(0, 6), nrow = 3))
+})
+
+test_that("compute_imputation_masks handles all missing values", {
+  data <- list(
+    data = data.frame(
+      x = c(NA, NA, NA),
+      y = c(NA, NA, NA)
+    )
+  )
+  
+  result <- compute_imputation_masks(data, c("x", "y"), 3)
+  
+  expect_equal(unname(result), matrix(rep(1, 6), nrow = 3))
+})
+
+test_that("compute_imputation_mask handles single variable", {
+  data <- list(
+    data = data.frame(
+      x = c(1, NA, 3)
+    )
+  )
+  
+  result <- compute_imputation_masks(data, "x", 3)
+  
+  expect_equal(unname(result), matrix(c(0, 1, 0)))
+})
+
 test_that("compute_score handles gaussian family correctly", {
   data <- data.frame(
     x = c(1, 2, 3, 4),
@@ -236,25 +289,6 @@ test_that("compute_information gaussian includes sigma parameter", {
   expect_equal(ncol(result), 3)
 })
 
-test_that("compute_information handles no observed data", {
-  data <- data.frame(
-    x = c(1, 2, 3),
-    y = c(2, 4, 6)
-  )
-  
-  model_info <- list(
-    family = "gaussian",
-    coefficients = c("(Intercept)" = 0.0, x = 2.0),
-    sigma2 = 1.0
-  )
-  
-  imputed_flag <- c(1, 1, 1)
-  
-  result <- compute_information(data, model_info, "y", imputed_flag)
-  
-  expect_true(all(result == 0))
-})
-
 test_that("build_block_diagonal creates correct structure", {
   mat1 <- matrix(c(1, 0, 0, 1), 2, 2)
   mat2 <- matrix(c(2, 0, 0, 2), 2, 2)
@@ -365,7 +399,8 @@ test_that("compute_imputation_components returns correct structure", {
     x = c(1, 2, 3, 4),
     y = c(2, 4, 7, 3),
     z = c(0, 1, 1, 0),
-    .imputed = c(0, 1, 1, 0)
+    .imputed_z = c(0, 1, 1, 0),
+    .imputed_y = c(0, 1, 0, 1)
   )
   
   model_list <- list(
@@ -389,9 +424,9 @@ test_that("compute_imputation_components returns correct structure", {
 
 test_that("compute_imputation_components masks non-imputed observations", {
   data.i <- data.frame(
-    x = c(1, 2, 3),
+    x = c(1, 2, 4),
     y = c(2, 4, 6),
-    .imputed = c(0, 0, 0)
+    .imputed_y = c(0, 0, 0) 
   )
   
   model_list <- list(

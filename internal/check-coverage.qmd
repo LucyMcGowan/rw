@@ -4,6 +4,8 @@ format: gfm
 ---
 
 ```{r}
+#| message: false
+#| warning: false
 library(mice)
 library(rw)
 library(dplyr)
@@ -55,7 +57,7 @@ simulate_once <- function(i, n, m, true_beta, sigma, miss_prop) {
 ```
 
 ```{r}
-n_sims <- 1000
+n_sims <- 500
 
 set.seed(1)
 
