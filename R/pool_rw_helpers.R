@@ -17,10 +17,14 @@ compute_variance_components <- function(results, m, n) {
     d_bar_sum <- d_bar_sum + d
   }
   
+  #d <- results[[1]]$d
+  
   list(
     kappa = kappa_sum / (n * m),
     alpha = alpha_sum / (n * m),
+  #  alpha = crossprod(d) / n,
     d_bar = d_bar_sum / m
+  #  d_bar = d
   )
 }
 
