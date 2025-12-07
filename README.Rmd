@@ -45,6 +45,7 @@ The first step is to impute your data using mice. Note that currently only `meth
 #| message: false
 library(rw)
 library(mice)
+set.seed(1)
 imp <- mice(nhanes, method = "norm", m = 5, tasks = "train", print = FALSE)
 ```
 

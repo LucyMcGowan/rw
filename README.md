@@ -40,6 +40,7 @@ and perform multiple imputation using the `norm` method.
 ``` r
 library(rw)
 library(mice)
+set.seed(1)
 imp <- mice(nhanes, method = "norm", m = 5, tasks = "train", print = FALSE)
 ```
 
@@ -63,10 +64,10 @@ pool_rw(fit)
 #> Number of imputations: 5
 #> Sample size: 25
 #> 
-#>          term estimate std.error statistic p.value conf.low conf.high
-#> 1 (Intercept)   28.617     51.88   0.55161  0.5812   -73.06    130.30
-#> 2         age   -3.058     23.33  -0.13105  0.8957   -48.79     42.67
-#> 3         hyp    3.204     34.36   0.09325  0.9257   -64.13     70.54
+#>                    term estimate std.error statistic p.value conf.low conf.high
+#> (Intercept) (Intercept)   28.420    62.471   0.45493  0.6492   -94.02    150.86
+#> age                 age   -2.512     6.399  -0.39252  0.6947   -15.05     10.03
+#> hyp                 hyp    1.878    53.437   0.03514  0.9720  -102.86    106.61
 ```
 
 Let’s compare this result to using Rubin’s rules.
@@ -75,10 +76,10 @@ Let’s compare this result to using Rubin’s rules.
 fit_rr <- with(imp, lm(bmi ~ age + hyp))
 pool(fit_rr) |>
   summary()
-#>          term  estimate std.error statistic        df      p.value
-#> 1 (Intercept) 28.616514  3.403986  8.406766 11.558784 2.911276e-06
-#> 2         age -3.057764  1.436188 -2.129083  8.956052 6.226165e-02
-#> 3         hyp  3.203510  2.961103  1.081864  7.473962 3.129791e-01
+#>          term  estimate std.error  statistic       df     p.value
+#> 1 (Intercept) 28.419634  4.660152  6.0984355 3.292597 0.006729336
+#> 2         age -2.511792  1.995151 -1.2589480 3.883028 0.278417451
+#> 3         hyp  1.877623  4.096953  0.4582975 2.895862 0.678933396
 ```
 
 ## Giganti & Shepherd Example
@@ -108,7 +109,10 @@ pooled
 #> Number of imputations: 10
 #> Sample size: 4000
 #> 
-#>          term estimate std.error statistic   p.value conf.low conf.high
-#> 1 (Intercept)  -3.4864   0.23876    -14.60 2.721e-48  -3.9543    -3.018
-#> 2           A   0.8764   0.08217     10.67 1.469e-26   0.7154     1.038
+#>                    term estimate std.error statistic   p.value conf.low
+#> (Intercept) (Intercept)  -3.4864   0.23876    -14.60 2.721e-48  -3.9543
+#> A                     A   0.8764   0.08217     10.67 1.469e-26   0.7154
+#>             conf.high
+#> (Intercept)    -3.018
+#> A               1.038
 ```

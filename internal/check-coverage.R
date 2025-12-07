@@ -1,0 +1,68 @@
+library(mice)
+library(rw)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+simulate_once <- function(i, n, m, true_beta, sigma, miss_prop) {
+  X1 <- rnorm(n)
+  X2 <- rnorm(n)
+  Y <- true_beta[1] + true_beta[2] * X1 + true_beta[3] * X2 + rnorm(n, sd = sigma)
+  
+  dat <- data.frame(Y = Y, X1 = X1, X2 = X2)
+  miss_idx <- sample(1:n, size = floor(miss_prop * n))
+  dat$Y[miss_idx] <- NA
+  
+  imp <- mice(dat, method = "norm", m = m, tasks = "train", printFlag = FALSE)
+  
+  rw_result <- tryCatch({
+    fit_rw <- with_rw(imp, lm(Y ~ X1 + X2))
+    pooled_rw <- pool_rw(fit_rw)
+    
+    data.frame(
+      sim = i,
+      method = "RW",
+      term = pooled_rw$pooled$term,
+      estimate = pooled_rw$pooled$estimate,
+      se = pooled_rw$pooled$std.error
+    )
+  }, error = function(e) NULL)
+  
+  rubin_result <- tryCatch({
+    fit_mice <- with(imp, lm(Y ~ X1 + X2))
+    pooled_mice <- pool(fit_mice)
+    summ <- summary(pooled_mice)
+    
+    data.frame(
+      sim = i,
+      method = "Rubin",
+      term = summ$term,
+      estimate = summ$estimate,
+      se = summ$std.error
+    )
+  }, error = function(e) NULL)
+  
+  bind_rows(rw_result, rubin_result)
+}
+
+n_sims <- 1000
+
+set.seed(1)
+
+results <- seq_len(n_sims) |>
+  lapply(simulate_once, n = 100, m = 10, true_beta = c(5, 2, -1), 
+         sigma = 2, miss_prop = 0.3) |>
+  bind_rows()
+
+true_params <- data.frame(
+  term = c("(Intercept)", "X1", "X2"),
+  true_value = c(5, 2, -1)
+)
+results |>
+  left_join(true_params, by = "term") |>
+group_by(method, term) |>
+  summarise(
+    empirical_sd = sd(estimate),
+    estiamted_sd = mean(se),
+    coverage_95 = mean(abs(estimate - true_value) <= 1.96 * se)
+  )

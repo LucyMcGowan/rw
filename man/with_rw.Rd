@@ -26,9 +26,6 @@ score functions and information matrices. Supported methods include:
 \item norm (for continuous variables)
 \item logreg (for binary variables)
 }
-
-Non-parametric methods like pmm, cart, rf are NOT supported because they
-don't have well-defined score functions needed for Robins-Wang variance.
 }
 \examples{
 \dontrun{
