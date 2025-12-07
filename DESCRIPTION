@@ -1,0 +1,24 @@
+Package: rw
+Title: Robins-Wang Variance Estimation for Multiply Imputed Data Created with mice
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Lucy", "D'Agostino McGowan", , "lucydagostino@gmail.com", role = c("aut", "cre")),
+    person("Suyang", "Yu", role = "aut")
+  )
+Description: Computes the Robins-Wang variance estimator for analyses performed 
+  on datasets that have been multiply imputed using the mice package. This 
+  method provides an alternative to Rubin's rules, offering improved variance
+  estimation under certain missing-data conditions.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    cli,
+    mice
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Depends: 
+    R (>= 3.5)
+LazyData: true
