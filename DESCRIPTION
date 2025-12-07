@@ -15,7 +15,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
     cli,
-    mice
+    mice (>= 3.17.3.9000)
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
@@ -23,3 +23,5 @@ Depends:
     R (>= 3.5)
 LazyData: true
 URL: https://lucymcgowan.github.io/rw/
+Remotes:  
+    amices/mice
