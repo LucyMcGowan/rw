@@ -13,7 +13,6 @@ beta.star <- c(1, 0, 0)
 gamma.star <- c(-3, 0, 0, 0.5)
 beta <- c(0, -1, 0.5, 0.9, 0.5)
 gamma <- c(-5.5, -2, 1, 0.0, 5.0, 0.5)
-Nimpute <- 50 # Number of imputations
 
 # Generate values
 # Covariates X and X2
@@ -70,7 +69,7 @@ inclusionthreshold <- inthresh
 ChooseSubset <- sample(1:obs, n.sample, replace = F)
 sampled <- as.numeric((1:obs) %in% ChooseSubset)
 
-#Original dataset
+# Original dataset
 dat <- dat.original <- data.frame(ID,X1,X2,A.star,D.star,A,D)
 dat$Intercept <- 1
 dat$A <- ifelse(sampled == 0, NA, dat$A)
