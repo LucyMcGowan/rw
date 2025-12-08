@@ -1,7 +1,8 @@
-# rw
+# `R/rw`: Robins & Wang multiple imputation variance estimator
 
-The purpose of the rw package is to compute Robins-Wang variance
-estimates for multiply imputed data analyses.
+The purpose of the `rw` package is to compute [Robins-Wang variance
+estimates](https://doi.org/10.1093/biomet/87.1.113) for multiply imputed
+data analyses.
 
 ## Installation
 
@@ -9,10 +10,10 @@ This package requires the development version of mice with the `tasks`
 argument:
 
 ``` r
-remotes::install_github("amices/mice")
+remotes::install_github("amices/mice@dev")
 ```
 
-Then you can install the development version of rw like so:
+Then you can install the development version of `rw` like so:
 
 ``` r
 remotes::install_github("LucyMcGowan/rw")
@@ -20,9 +21,9 @@ remotes::install_github("LucyMcGowan/rw")
 
 ## Example
 
-The first step is to impute your data using mice. Note that currently
+The first step is to impute your data using `mice`. Note that currently
 only `method = "norm"` and `method = "logreg"` are supported. When using
-the `mice` function, you must set the parameter `task = "train"` in
+the `mice` function, you must set the parameter `tasks = "train"` in
 order to pass the necessary parts to our subsequent functions. For
 example, see below. We will use the `nhanes` data from the mice package
 and perform multiple imputation using the `norm` method.
@@ -80,7 +81,8 @@ pool(fit_rr) |>
 
 ## Giganti & Shepherd Example
 
-Below is an example to replicate the Giganti & Shepherd (2020) results.
+Below is an example to replicate the [Giganti & Shepherd
+(2020)](https://doi.org/10.1093/aje/kwaa153) results.
 
 ``` r
 set.seed(1)

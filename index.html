@@ -45,25 +45,26 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="rw">rw<a class="anchor" aria-label="anchor" href="#rw"></a>
+<div class="page-header"><h1 id="rrw-robins--wang-multiple-imputation-variance-estimator">
+<code>R/rw</code>: Robins &amp; Wang multiple imputation variance estimator<a class="anchor" aria-label="anchor" href="#rrw-robins--wang-multiple-imputation-variance-estimator"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p>The purpose of the rw package is to compute Robins-Wang variance estimates for multiply imputed data analyses.</p>
+<p>The purpose of the <code>rw</code> package is to compute <a href="https://doi.org/10.1093/biomet/87.1.113" class="external-link">Robins-Wang variance estimates</a> for multiply imputed data analyses.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>This package requires the development version of mice with the <code>tasks</code> argument:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"amices/mice"</span><span class="op">)</span></span></code></pre></div>
-<p>Then you can install the development version of rw like so:</p>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"amices/mice@dev"</span><span class="op">)</span></span></code></pre></div>
+<p>Then you can install the development version of <code>rw</code> like so:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"LucyMcGowan/rw"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>The first step is to impute your data using mice. Note that currently only <code>method = "norm"</code> and <code>method = "logreg"</code> are supported. When using the <code>mice</code> function, you must set the parameter <code>task = "train"</code> in order to pass the necessary parts to our subsequent functions. For example, see below. We will use the <code>nhanes</code> data from the mice package and perform multiple imputation using the <code>norm</code> method.</p>
+<p>The first step is to impute your data using <code>mice</code>. Note that currently only <code>method = "norm"</code> and <code>method = "logreg"</code> are supported. When using the <code>mice</code> function, you must set the parameter <code>tasks = "train"</code> in order to pass the necessary parts to our subsequent functions. For example, see below. We will use the <code>nhanes</code> data from the mice package and perform multiple imputation using the <code>norm</code> method.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lucymcgowan.github.io/rw/">rw</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/amices/mice" class="external-link">mice</a></span><span class="op">)</span></span>
@@ -103,7 +104,7 @@
 <div class="section level2">
 <h2 id="giganti--shepherd-example">Giganti &amp; Shepherd Example<a class="anchor" aria-label="anchor" href="#giganti--shepherd-example"></a>
 </h2>
-<p>Below is an example to replicate the Giganti &amp; Shepherd (2020) results.</p>
+<p>Below is an example to replicate the <a href="https://doi.org/10.1093/aje/kwaa153" class="external-link">Giganti &amp; Shepherd (2020)</a> results.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">meth</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://amices.org/mice/reference/make.method.html" class="external-link">make.method</a></span><span class="op">(</span><span class="va">giganti_data</span><span class="op">)</span></span>
