@@ -6,6 +6,10 @@
 
 - **Suyang Yu**. Author.
 
+- **Mark Giganti**. Contributor.
+
+- **Brian Williamson**. Contributor.
+
 ## Citation
 
 D'Agostino McGowan L, Yu S (2025). *rw: Robins-Wang Variance Estimation
