@@ -140,6 +140,19 @@ compute_analysis_components <- function(mod_analysis, data.i, n) {
   )
 }
 
+prepare_imputed_data <- function(data, p, imputed_vars, n) {
+  data.i <- mice::complete(data, action = p)
+  data.i <- convert_logreg_factors(data.i, imputed_vars)
+  
+  # Add variable-specific imputation indicators
+  imputed_masks <- compute_imputation_masks(data, imputed_vars, n)
+  for (var in imputed_vars) {
+    data.i[[paste0(".imputed_", var)]] <- imputed_masks[, var]
+  }
+  
+  data.i
+}
+
 process_imputed_datasets <- function(data, expr, model_list, imputed_vars, m, n, envir) {
   results <- vector("list", m)
   

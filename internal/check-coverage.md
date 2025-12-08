@@ -3,36 +3,8 @@
 
 ``` r
 library(mice)
-```
-
-
-    Attaching package: 'mice'
-
-    The following object is masked from 'package:stats':
-
-        filter
-
-    The following objects are masked from 'package:base':
-
-        cbind, rbind
-
-``` r
 library(rw)
 library(dplyr)
-```
-
-
-    Attaching package: 'dplyr'
-
-    The following objects are masked from 'package:stats':
-
-        filter, lag
-
-    The following objects are masked from 'package:base':
-
-        intersect, setdiff, setequal, union
-
-``` r
 library(purrr)
 
 
@@ -81,7 +53,7 @@ simulate_once <- function(i, n, m, true_beta, sigma, miss_prop) {
 ```
 
 ``` r
-n_sims <- 1000
+n_sims <- 500
 
 set.seed(1)
 
@@ -89,10 +61,12 @@ true_params <- data.frame(
   term = c("(Intercept)", "X1", "X2"),
   true_value = c(2, 0, -1)
 )
+n <- 1000
+crit <- qt(0.975, n - ncol(true_params))
 results <- seq_len(n_sims) |>
-  map(simulate_once, n = 2000, m = 30, 
+  map(simulate_once, n = n, m = 20, 
       true_beta = true_params$true_value, 
-      sigma = 2, miss_prop = 0.3) |>
+      sigma = 5, miss_prop = 0.3) |>
   list_rbind()
 
 
@@ -102,7 +76,7 @@ results |>
   summarise(
     empirical_sd = sd(estimate),
     estiamted_sd = mean(se),
-    coverage_95 = mean(abs(estimate - true_value) <= 1.96 * se),
+    coverage_95 = mean(abs(estimate - true_value) <= crit * se),
     .groups = "drop"
   )
 ```
@@ -110,9 +84,9 @@ results |>
     # A tibble: 6 × 5
       method term        empirical_sd estiamted_sd coverage_95
       <chr>  <chr>              <dbl>        <dbl>       <dbl>
-    1 RW     (Intercept)       0.0536       0.0747       0.993
-    2 RW     X1                0.0644       0.104        0.999
-    3 RW     X2                0.0547       0.0899       0.998
-    4 Rubin  (Intercept)       0.0536       0.0539       0.947
-    5 Rubin  X1                0.0644       0.0643       0.951
-    6 Rubin  X2                0.0547       0.0538       0.94 
+    1 RW     (Intercept)        0.197        0.189       0.942
+    2 RW     X1                 0.231        0.211       0.94 
+    3 RW     X2                 0.183        0.189       0.968
+    4 Rubin  (Intercept)        0.197        0.190       0.938
+    5 Rubin  X1                 0.231        0.228       0.95 
+    6 Rubin  X2                 0.183        0.190       0.964

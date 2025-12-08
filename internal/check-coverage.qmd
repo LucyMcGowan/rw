@@ -65,10 +65,12 @@ true_params <- data.frame(
   term = c("(Intercept)", "X1", "X2"),
   true_value = c(2, 0, -1)
 )
+n <- 1000
+crit <- qt(0.975, n - ncol(true_params))
 results <- seq_len(n_sims) |>
-  map(simulate_once, n = 2000, m = 30, 
+  map(simulate_once, n = n, m = 20, 
       true_beta = true_params$true_value, 
-      sigma = 2, miss_prop = 0.3) |>
+      sigma = 5, miss_prop = 0.3) |>
   list_rbind()
 
 
@@ -78,7 +80,7 @@ results |>
   summarise(
     empirical_sd = sd(estimate),
     estiamted_sd = mean(se),
-    coverage_95 = mean(abs(estimate - true_value) <= 1.96 * se),
+    coverage_95 = mean(abs(estimate - true_value) <= crit * se),
     .groups = "drop"
   )
 ```

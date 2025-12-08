@@ -7,19 +7,6 @@ compute_imputation_masks <- function(data, imputed_vars, n) {
   masks
 }
 
-prepare_imputed_data <- function(data, p, imputed_vars, n) {
-  data.i <- mice::complete(data, action = p)
-  data.i <- convert_logreg_factors(data.i, imputed_vars)
-  
-  # Add variable-specific imputation indicators
-  imputed_masks <- compute_imputation_masks(data, imputed_vars, n)
-  for (var in imputed_vars) {
-    data.i[[paste0(".imputed_", var)]] <- imputed_masks[, var]
-  }
-  
-  data.i
-}
-
 compute_score <- function(data, model_info, var_name) {
   # Extract and clean coefficient names
   beta <- model_info$coefficients
@@ -215,8 +202,7 @@ compute_imputation_components <- function(data.i, model_list, imputed_vars) {
   S2 <- compute_information_matrix(data.i, model_list, imputed_vars)
   Dmat <- solve(S2)
   
-  # Compute d = -Dmat %*% t(S_orig)
-  d <- t((-1) * Dmat %*% t(S_orig))
+  d <- t(- Dmat %*% t(S_orig))
   
   list(S_mis_imp = S_mis_imp, d = d)
 }
