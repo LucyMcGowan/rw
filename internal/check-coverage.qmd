@@ -79,7 +79,7 @@ results |>
   group_by(method, term) |>
   summarise(
     empirical_sd = sd(estimate),
-    estiamted_sd = mean(se),
+    estimated_sd = mean(se),
     coverage_95 = mean(abs(estimate - true_value) <= crit * se),
     .groups = "drop"
   )
