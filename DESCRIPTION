@@ -3,7 +3,9 @@ Title: Robins-Wang Variance Estimation for Multiply Imputed Data Created with mi
 Version: 0.0.0.9000
 Authors@R: c(
     person("Lucy", "D'Agostino McGowan", , "lucydagostino@gmail.com", role = c("aut", "cre")),
-    person("Suyang", "Yu", role = "aut")
+    person("Suyang", "Yu", role = "aut"),
+    person("Mark", "Giganti", role = "ctb"),
+    person("Brian", "Williamson", role = "ctb")
   )
 Description: Computes the Robins-Wang variance estimator for analyses performed 
   on datasets that have been multiply imputed using the mice package. This 
@@ -23,5 +25,5 @@ Depends:
     R (>= 3.5)
 LazyData: true
 URL: https://lucymcgowan.github.io/rw/
-Remotes:  
+Remotes: 
     amices/mice
