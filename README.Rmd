@@ -27,7 +27,7 @@ The purpose of the `rw` package is to compute [Robins-Wang variance estimates](h
 This package requires the development version of mice with the `tasks` argument:
 
 ```r
-remotes::install_github("amices/mice")
+remotes::install_github("amices/mice@dev")
 ```
 
 Then you can install the development version of `rw` like so:
