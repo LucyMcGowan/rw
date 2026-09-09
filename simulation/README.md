@@ -29,6 +29,20 @@ their data-generating and analysis models differ. Both use the same files in
 for RW or `pmm_kappa_binomial()` for GS. `pool_rw()` computes the final
 variance in both the parametric and PMM paths. `results.R` saves Rubin-rule results, variance components, score norms, donor reuse and matching errors.
 
+## Target coefficient
+
+`beta0` is the population coefficient of the complete-data analysis model.
+For the GS generator and `A > 2`, it is approximately `0.885377976781648`,
+obtained by numerical integration of the population logistic score.
+The same value is used for all sample sizes and imputation settings.
+For RW, `beta0 = 1`, except for S3b: the quadratic mean gives the
+no-intercept linear slope `1.689707792207792`. S3a and S3b are extensions
+of the original RW settings.
+
+Earlier saved results used a per-sample GS coefficient and `1` for RW S3b.
+Their `beta0`, bias and true-target coverage are not comparable to new runs.
+Empirical-centered coverage remains a separate variance diagnostic.
+
 ## Simulation scripts
 
 Each scenario has four scripts:
@@ -55,4 +69,3 @@ Rscript GS_scenario/scripts/summarize.R TASK_FILE RAW_DIR SUMMARY_FILE CELL_ID
 Rscript RW_scenario/scripts/run.R TASK_FILE TASK_ID RAW_DIR
 Rscript RW_scenario/scripts/summarize.R TASK_FILE RAW_DIR SUMMARY_FILE
 ```
-
