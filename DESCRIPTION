@@ -1,29 +1,26 @@
 Package: rw
-Title: Robins-Wang Variance Estimation for Multiply Imputed Data Created with mice
-Version: 0.0.0.9000
+Title: Robins-Wang Variance Estimation for Multiply Imputed Data
+Version: 0.0.0.9002
 Authors@R: c(
-    person("Lucy", "D'Agostino McGowan", , "lucydagostino@gmail.com", role = c("aut", "cre")),
+    person("Lucy", "D'Agostino McGowan", email = "lucydagostino@gmail.com", role = c("aut", "cre")),
     person("Suyang", "Yu", role = "aut"),
     person("Mark", "Giganti", role = "ctb"),
     person("Brian", "Williamson", role = "ctb")
   )
-Description: Computes the Robins-Wang variance estimator for analyses performed 
-  on datasets that have been multiply imputed using the mice package. This 
-  method provides an alternative to Rubin's rules, offering improved variance
-  estimation under certain missing-data conditions.
+Description: Computes Robins-Wang variance estimates for analyses of multiply
+    imputed data after normal, logistic, or predictive mean matching
+    chained-equation imputation. Analysis models may be linear or binomial
+    generalized linear models.
 License: MIT + file LICENSE
+URL: https://yu000434.github.io/rw/,
+    https://github.com/yu000434/rw
+BugReports: https://github.com/yu000434/rw/issues
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = TRUE, roclets = "namespace")
 RoxygenNote: 7.3.2
-Imports: 
-    cli,
-    mice (>= 3.17.3.9000)
-Suggests: 
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
-Depends: 
-    R (>= 3.5)
+Depends: R (>= 3.5)
 LazyData: true
-URL: https://lucymcgowan.github.io/rw/
-Remotes: 
-    amices/mice
+Imports: mice (>= 3.17.3.9000)
+Suggests: testthat (>= 3.0.0)
+Remotes: amices/mice@dev
+Config/testthat/edition: 3

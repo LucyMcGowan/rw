@@ -1,4 +1,16 @@
-url: https://lucymcgowan.github.io/rw/
+url: https://yu000434.github.io/rw/
 template:
   bootstrap: 5
+  math-rendering: mathjax
 
+reference:
+- title: Analysis and pooling
+  contents:
+  - with_rw
+- title: Predictive mean matching
+  contents:
+  - mice.impute.pmmrw
+  - pmm_kappa
+- title: Data
+  contents:
+  - giganti_data

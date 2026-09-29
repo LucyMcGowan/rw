@@ -7,4 +7,6 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-^internal$
+^simulation$
+^\.git$
+^\.gitignore$

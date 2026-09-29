@@ -3,3 +3,6 @@
 .RData
 .Ruserdata
 docs
+.DS_Store
+README.html
+simulation/results/
