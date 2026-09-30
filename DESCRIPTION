@@ -1,6 +1,6 @@
 Package: rw
 Title: Robins-Wang Variance Estimation for Multiply Imputed Data
-Version: 0.0.0.9002
+Version: 0.1.0
 Authors@R: c(
     person("Lucy", "D'Agostino McGowan", email = "lucydagostino@gmail.com", role = c("aut", "cre")),
     person("Suyang", "Yu", role = "aut"),

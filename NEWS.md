@@ -1,3 +1,7 @@
+# rw 0.1.0
+
+Initial CRAN submission.
+
 # rw 0.0.0.9002
 
 - Add `pmmrw` imputation with donor recording and donor-source variance correction.
