@@ -12,14 +12,15 @@
 
 ## Citation
 
-D'Agostino McGowan L, Yu S (2025). *rw: Robins-Wang Variance Estimation
-for Multiply Imputed Data Created with mice*. R package version
-0.0.0.9000, <https://lucymcgowan.github.io/rw/>.
+Source:
+[`inst/CITATION`](https://github.com/lucymcgowan/rw/blob/main/inst/CITATION)
+
+D'Agostino McGowan L, Yu S, Giganti M, Williamson B (2026). *rw*.
+<https://github.com/LucyMcGowan/rw>.
 
     @Manual{,
-      title = {rw: Robins-Wang Variance Estimation for Multiply Imputed Data Created with mice},
-      author = {Lucy {D'Agostino McGowan} and Suyang Yu},
-      year = {2025},
-      note = {R package version 0.0.0.9000},
-      url = {https://lucymcgowan.github.io/rw/},
+      title = {rw},
+      author = {Lucy {D'Agostino McGowan} and Suyang Yu and Mark Giganti and Brian D. Williamson},
+      year = {2026},
+      url = {https://github.com/LucyMcGowan/rw},
     }
