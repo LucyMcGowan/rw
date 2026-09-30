@@ -13,7 +13,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/lucymcgowan/rw/blob/v0.1.0/inst/CITATION)
+[`inst/CITATION`](https://github.com/lucymcgowan/rw/blob/main/inst/CITATION)
 
 D'Agostino McGowan L, Yu S, Giganti M, Williamson B (2026). *rw*.
 <https://github.com/LucyMcGowan/rw>.
