@@ -10,3 +10,4 @@
 ^simulation$
 ^\.git$
 ^\.gitignore$
+^CITATION\.cff$

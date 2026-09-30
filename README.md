@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/yu000434/rw/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yu000434/rw/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/lucymcgowan/rw/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lucymcgowan/rw/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The `rw` package computes [Robins-Wang variance
@@ -20,7 +20,7 @@ fitted imputation models through `tasks = "train"`.
 
 ``` r
 remotes::install_github("amices/mice@dev")
-remotes::install_github("yu000434/rw")
+remotes::install_github("lucymcgowan/rw")
 ```
 
 ## Parametric imputation
@@ -229,4 +229,4 @@ See `?pool_rw` and `?pmm_kappa` for the supported model structures, and
 
 Scripts and task tables for the Giganti-Shepherd and Robins-Wang
 simulations are available in
-[simulation/](https://github.com/yu000434/rw/tree/main/simulation).
+[simulation/](https://github.com/lucymcgowan/rw/tree/main/simulation).

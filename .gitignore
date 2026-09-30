@@ -6,3 +6,5 @@ docs
 .DS_Store
 README.html
 simulation/results/
+
+/.quarto/

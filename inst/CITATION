@@ -1,0 +1,12 @@
+bibentry(
+  bibtype = "Manual",
+  title = "rw",
+  author = c(
+    person("Lucy", "D'Agostino McGowan"),
+    person("Suyang", "Yu"),
+    person("Mark", "Giganti"),
+    person("Brian D.", "Williamson")
+  ),
+  year = "2026",
+  url = "https://github.com/LucyMcGowan/rw"
+)

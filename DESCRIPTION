@@ -12,9 +12,9 @@ Description: Computes Robins-Wang variance estimates for analyses of multiply
     chained-equation imputation. Analysis models may be linear or binomial
     generalized linear models.
 License: MIT + file LICENSE
-URL: https://yu000434.github.io/rw/,
-    https://github.com/yu000434/rw
-BugReports: https://github.com/yu000434/rw/issues
+URL: https://lucymcgowan.github.io/rw/,
+    https://github.com/lucymcgowan/rw
+BugReports: https://github.com/lucymcgowan/rw/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = "namespace")
 RoxygenNote: 7.3.2
