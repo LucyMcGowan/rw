@@ -5,7 +5,8 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/lucymcgowan/rw/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lucymcgowan/rw/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/lucymcgowan/rw/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lucymcgowan/rw/actions/workflows/R-CMD-check.yaml)\
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23070495.svg)](https://doi.org/10.5281/zenodo.23070495)
 <!-- badges: end -->
 
 The `rw` package computes [Robins-Wang variance
